@@ -1,0 +1,15 @@
+# Postgres для локальной разработки: pnpm db:up
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: english
+      POSTGRES_PASSWORD: english
+      POSTGRES_DB: english_bot
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
