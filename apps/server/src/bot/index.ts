@@ -62,7 +62,7 @@ bot.command('help', async (ctx) => {
       `• ${MENU.train} — упражнения по твоим словам`,
       `• ${MENU.progress} — статистика`,
       `• ${MENU.words} — список слов`,
-      `• ${MENU.export} — выгрузить все слова в CSV`,
+      `• ${MENU.export} — выгрузить все слова в Excel`,
     ].join('\n'),
     { reply_markup: mainMenu },
   );
@@ -191,7 +191,7 @@ export async function setupBotCommands(): Promise<void> {
     { command: 'train', description: 'Тренировка' },
     { command: 'words', description: 'Мои слова' },
     { command: 'progress', description: 'Прогресс' },
-    { command: 'export', description: 'Выгрузить слова в CSV' },
+    { command: 'export', description: 'Выгрузить слова в Excel' },
     { command: 'help', description: 'Как пользоваться' },
   ]);
 }

@@ -34,3 +34,16 @@ packages/shared/    общие типы для сервера и Mini App
 1. Правишь `apps/server/src/db/schema.ts`
 2. `pnpm db:generate` — создаёт новую миграцию в `apps/server/drizzle/`
 3. При следующем запуске она применится автоматически
+
+## Деплой на сервер
+
+```bash
+git clone https://github.com/MaratUzdenov/english_bot.git
+cd english_bot
+cp .env.example .env && nano .env     # BOT_TOKEN, ALLOWED_USERS, ключи ИИ, POSTGRES_PASSWORD
+docker compose up -d --build
+docker compose logs -f bot
+```
+
+Обновление: `git pull`, затем `docker compose up -d --build`.
+Бэкап: `scripts/backup.sh` (по cron раз в день, хранит 14 дней в `backups/`).

@@ -1,5 +1,5 @@
 import { type Bot, type Context, InlineKeyboard, InputFile } from 'grammy';
-import { buildExportCsv } from '../services/export.js';
+import { buildExportXlsx } from '../services/export.js';
 import { type Stats, getStats } from '../services/stats.js';
 import { MENU } from './keyboards.js';
 import { BEGIN_TRAINING } from './training.js';
@@ -44,13 +44,13 @@ async function sendProgress(ctx: Context): Promise<void> {
 
 async function sendExport(ctx: Context): Promise<void> {
   await ctx.replyWithChatAction('upload_document');
-  const { csv, count } = await buildExportCsv(ctx.from!.id);
+  const { file, count } = await buildExportXlsx(ctx.from!.id);
   if (count === 0) {
     await ctx.reply('Пока нечего выгружать — пришли мне слово для перевода.');
     return;
   }
   const date = new Date().toISOString().slice(0, 10);
-  await ctx.replyWithDocument(new InputFile(csv, `english-words-${date}.csv`), {
+  await ctx.replyWithDocument(new InputFile(file, `english-words-${date}.xlsx`), {
     caption: `📤 Все слова, которые ты присылал(а): ${count}.\nОткрывается в Excel и Google Таблицах.`,
   });
 }
