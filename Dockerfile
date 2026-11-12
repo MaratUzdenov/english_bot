@@ -8,7 +8,7 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
 COPY packages/shared/package.json packages/shared/
 COPY apps/server/package.json apps/server/
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --filter @english-bot/server...
 
 COPY packages/shared packages/shared
 COPY apps/server apps/server

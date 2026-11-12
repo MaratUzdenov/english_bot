@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "@english-bot/shared": "workspace:*",
+    "@fastify/cors": "^11.4.1",
     "drizzle-orm": "^0.44.0",
     "exceljs": "^4.4.0",
+    "fastify": "^5.12.8",
     "grammy": "^1.30.0",
     "postgres": "^3.4.5",
     "zod": "^3.23.8"

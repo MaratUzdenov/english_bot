@@ -327,10 +327,11 @@ Reply with valid JSON only, no markdown:
 }
 
 /** Ответ текстом на «напиши слово» или «составь предложение». */
-export async function answerText(userId: number, text: string): Promise<AnswerResult | null> {
+export async function answerText(userId: number, text: string, seq?: number): Promise<AnswerResult | null> {
   const state = await loadState(userId);
   const task = state?.current;
   if (!state || !task) return null;
+  if (seq !== undefined && task.seq !== seq) return null;
 
   if (task.type === 'write') {
     const check = checkWritten(text, task.accept ?? [task.term.toLowerCase()]);

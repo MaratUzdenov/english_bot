@@ -1,3 +1,4 @@
+import { startApi } from './api/server.js';
 import { bot, setupBotCommands } from './bot/index.js';
 import { closeDb, runMigrations } from './db/client.js';
 
@@ -6,10 +7,12 @@ async function main(): Promise<void> {
   console.log('✅ Миграции применены');
 
   await setupBotCommands();
+  const api = await startApi();
 
   const shutdown = async (signal: string) => {
     console.log(`${signal}: останавливаюсь…`);
     await bot.stop();
+    await api.close();
     await closeDb();
     process.exit(0);
   };

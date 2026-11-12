@@ -1,0 +1,48 @@
+# Сборка Mini App и публикация на GitHub Pages при каждом push в main
+name: Deploy Mini App
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/miniapp/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --filter @english-bot/miniapp
+      - run: pnpm --filter @english-bot/miniapp build
+        env:
+          VITE_API_URL: https://marat-english-words.duckdns.org:8443
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/miniapp/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

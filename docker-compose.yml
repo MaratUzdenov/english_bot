@@ -20,6 +20,13 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: postgres://english:${POSTGRES_PASSWORD}@postgres:5432/english_bot
+      API_PORT: 8443
+      TLS_CERT_PATH: /certs/fullchain.pem
+      TLS_KEY_PATH: /certs/key.pem
+    ports:
+      - "8443:8443"   # API для Mini App (443 занят VPN)
+    volumes:
+      - ./certs:/certs:ro   # сертификат от acme.sh
     depends_on:
       postgres:
         condition: service_healthy

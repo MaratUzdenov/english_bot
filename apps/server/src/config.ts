@@ -21,6 +21,11 @@ const envSchema = z.object({
   GEMINI_MODEL: z.string().default('gemini-3.5-flash-lite'),
   OPENROUTER_MODEL: z.string().default('openrouter/free'),
   TIMEZONE: z.string().default('Asia/Shanghai'),
+  API_PORT: z.coerce.number().int().default(8443),
+  TLS_CERT_PATH: z.string().optional(),
+  TLS_KEY_PATH: z.string().optional(),
+  MINIAPP_URL: z.string().url().default('https://maratuzdenov.github.io/english_bot/'),
+  CORS_ORIGINS: z.string().default('https://maratuzdenov.github.io,http://localhost:5173'),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -42,4 +47,9 @@ export const config = {
   geminiModel: parsed.data.GEMINI_MODEL,
   openRouterModel: parsed.data.OPENROUTER_MODEL,
   timezone: parsed.data.TIMEZONE,
+  apiPort: parsed.data.API_PORT,
+  tlsCertPath: parsed.data.TLS_CERT_PATH,
+  tlsKeyPath: parsed.data.TLS_KEY_PATH,
+  miniAppUrl: parsed.data.MINIAPP_URL,
+  corsOrigins: parsed.data.CORS_ORIGINS.split(',').map((o) => o.trim()).filter(Boolean),
 } as const;

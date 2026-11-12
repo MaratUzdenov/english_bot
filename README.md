@@ -26,6 +26,7 @@ apps/server/        бот (grammY) + позже API (Fastify)
   src/db/           схема Drizzle и подключение
   src/bot/          хендлеры и клавиатуры
   drizzle/          SQL-миграции (генерируются: pnpm db:generate)
+apps/miniapp/       Mini App (React + Vite) → GitHub Pages
 packages/shared/    общие типы для сервера и Mini App
 ```
 
@@ -47,3 +48,9 @@ docker compose logs -f bot
 
 Обновление: `git pull`, затем `docker compose up -d --build`.
 Бэкап: `scripts/backup.sh` (по cron раз в день, хранит 14 дней в `backups/`).
+
+## Mini App
+
+- Код: `apps/miniapp`, публикуется на `https://maratuzdenov.github.io/english_bot/` через GitHub Actions (`.github/workflows/pages.yml`) при push в `main`.
+- Ходит в API `https://marat-english-words.duckdns.org:8443` (переменная `VITE_API_URL`).
+- Открывается кнопкой «📱 Приложение» в боте или командой `/app`. Вне Telegram показывает заглушку.

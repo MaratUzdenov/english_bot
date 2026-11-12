@@ -1,4 +1,4 @@
-import { Bot, type Context } from 'grammy';
+import { Bot, type Context, InlineKeyboard } from 'grammy';
 import { config } from '../config.js';
 import { db } from '../db/client.js';
 import { users } from '../db/schema.js';
@@ -54,6 +54,12 @@ bot.command('start', async (ctx) => {
   );
 });
 
+const appKeyboard = () => new InlineKeyboard().webApp('📱 Открыть приложение', config.miniAppUrl);
+
+bot.command('app', async (ctx) => {
+  await ctx.reply('Тренировки, слова и статистика — в приложении 👇', { reply_markup: appKeyboard() });
+});
+
 bot.command('help', async (ctx) => {
   await ctx.reply(
     [
@@ -63,6 +69,7 @@ bot.command('help', async (ctx) => {
       `• ${MENU.progress} — статистика`,
       `• ${MENU.words} — список слов`,
       `• ${MENU.export} — выгрузить все слова в Excel`,
+      '• кнопка «📱 Приложение» слева от поля ввода (или /app) — то же самое в удобном приложении',
     ].join('\n'),
     { reply_markup: mainMenu },
   );
@@ -186,8 +193,13 @@ bot.catch((err) => {
 });
 
 export async function setupBotCommands(): Promise<void> {
+  // Кнопка слева от поля ввода открывает Mini App.
+  await bot.api.setChatMenuButton({
+    menu_button: { type: 'web_app', text: '📱 Приложение', web_app: { url: config.miniAppUrl } },
+  });
   await bot.api.setMyCommands([
     { command: 'start', description: 'Начать' },
+    { command: 'app', description: 'Открыть приложение' },
     { command: 'train', description: 'Тренировка' },
     { command: 'words', description: 'Мои слова' },
     { command: 'progress', description: 'Прогресс' },
