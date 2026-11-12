@@ -7,6 +7,7 @@ import { LlmUnavailableError } from '../services/llm.js';
 import { addWordFromLookup, deleteWord, getWordsPage } from '../services/words.js';
 import { escapeHtml, formatEntry, formatWordsPage } from './format.js';
 import { CB, MENU, addKeyboard, mainMenu, wordsKeyboard } from './keyboards.js';
+import { registerProgress } from './progress.js';
 import { handleTrainingText, registerTraining } from './training.js';
 
 export const bot = new Bot(config.botToken);
@@ -119,11 +120,9 @@ bot.callbackQuery(CB.noop, (ctx) => ctx.answerCallbackQuery());
 
 registerTraining(bot);
 
-// ---------- Заглушки (шаг 5) ----------
+// ---------- Прогресс и экспорт ----------
 
-const soon = (step: number) => `Скоро будет — это шаг ${step} 🛠`;
-bot.hears(MENU.progress, (ctx) => ctx.reply(soon(5)));
-bot.hears(MENU.export, (ctx) => ctx.reply(soon(5)));
+registerProgress(bot);
 
 // ---------- Перевод: любой другой текст ----------
 
@@ -191,6 +190,8 @@ export async function setupBotCommands(): Promise<void> {
     { command: 'start', description: 'Начать' },
     { command: 'train', description: 'Тренировка' },
     { command: 'words', description: 'Мои слова' },
+    { command: 'progress', description: 'Прогресс' },
+    { command: 'export', description: 'Выгрузить слова в CSV' },
     { command: 'help', description: 'Как пользоваться' },
   ]);
 }

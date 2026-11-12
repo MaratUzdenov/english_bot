@@ -20,6 +20,7 @@ const envSchema = z.object({
   OPENROUTER_API_KEY: z.string().optional(),
   GEMINI_MODEL: z.string().default('gemini-3.5-flash-lite'),
   OPENROUTER_MODEL: z.string().default('openrouter/free'),
+  TIMEZONE: z.string().default('Asia/Shanghai'),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -40,4 +41,5 @@ export const config = {
   openRouterApiKey: parsed.data.OPENROUTER_API_KEY,
   geminiModel: parsed.data.GEMINI_MODEL,
   openRouterModel: parsed.data.OPENROUTER_MODEL,
+  timezone: parsed.data.TIMEZONE,
 } as const;

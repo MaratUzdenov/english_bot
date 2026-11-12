@@ -21,6 +21,7 @@ const TB = {
   card: 'tc:', // tc:<seq>:show|1|0
   skip: 'ts:', // ts:<seq>
   next: 'tnext',
+  begin: 'tbegin',
   stop: 'tstop',
 } as const;
 
@@ -96,9 +97,16 @@ async function showResultInPlace(ctx: Context, result: AnswerResult | null): Pro
     .catch(() => undefined);
 }
 
+export const BEGIN_TRAINING = TB.begin;
+
 export function registerTraining(bot: Bot): void {
   bot.command('train', start);
   bot.hears(MENU.train, start);
+
+  bot.callbackQuery(TB.begin, async (ctx) => {
+    await ctx.answerCallbackQuery();
+    await start(ctx);
+  });
 
   bot.callbackQuery(new RegExp(`^${TB.answer}(\\d+):(\\d+)$`), async (ctx) => {
     const result = await answerChoice(ctx.from.id, Number(ctx.match[1]), Number(ctx.match[2]));
