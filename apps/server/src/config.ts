@@ -18,6 +18,8 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url('DATABASE_URL должен быть postgres://...'),
   GEMINI_API_KEY: z.string().optional(),
   OPENROUTER_API_KEY: z.string().optional(),
+  GEMINI_MODEL: z.string().default('gemini-3.5-flash-lite'),
+  OPENROUTER_MODEL: z.string().default('openrouter/free'),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -36,4 +38,6 @@ export const config = {
   databaseUrl: parsed.data.DATABASE_URL,
   geminiApiKey: parsed.data.GEMINI_API_KEY,
   openRouterApiKey: parsed.data.OPENROUTER_API_KEY,
+  geminiModel: parsed.data.GEMINI_MODEL,
+  openRouterModel: parsed.data.OPENROUTER_MODEL,
 } as const;
