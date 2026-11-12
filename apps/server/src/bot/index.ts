@@ -7,6 +7,7 @@ import { LlmUnavailableError } from '../services/llm.js';
 import { addWordFromLookup, deleteWord, getWordsPage } from '../services/words.js';
 import { escapeHtml, formatEntry, formatWordsPage } from './format.js';
 import { CB, MENU, addKeyboard, mainMenu, wordsKeyboard } from './keyboards.js';
+import { handleTrainingText, registerTraining } from './training.js';
 
 export const bot = new Bot(config.botToken);
 
@@ -114,10 +115,13 @@ bot.callbackQuery(new RegExp(`^${CB.add}(\\d+)$`), async (ctx) => {
 
 bot.callbackQuery(CB.noop, (ctx) => ctx.answerCallbackQuery());
 
-// ---------- Заглушки (шаги 4–5) ----------
+// ---------- Тренировка ----------
+
+registerTraining(bot);
+
+// ---------- Заглушки (шаг 5) ----------
 
 const soon = (step: number) => `Скоро будет — это шаг ${step} 🛠`;
-bot.hears(MENU.train, (ctx) => ctx.reply(soon(4)));
 bot.hears(MENU.progress, (ctx) => ctx.reply(soon(5)));
 bot.hears(MENU.export, (ctx) => ctx.reply(soon(5)));
 
@@ -129,6 +133,9 @@ bot.on('message:text', async (ctx) => {
     await ctx.reply('Не знаю такой команды. Смотри /help');
     return;
   }
+
+  // Если тренировка ждёт ответа текстом — это ответ, а не слово для перевода.
+  if (await handleTrainingText(ctx, text)) return;
 
   const check = checkInput(text);
   if (!check.ok) {
@@ -182,6 +189,7 @@ bot.catch((err) => {
 export async function setupBotCommands(): Promise<void> {
   await bot.api.setMyCommands([
     { command: 'start', description: 'Начать' },
+    { command: 'train', description: 'Тренировка' },
     { command: 'words', description: 'Мои слова' },
     { command: 'help', description: 'Как пользоваться' },
   ]);

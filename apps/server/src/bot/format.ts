@@ -1,9 +1,9 @@
 import type { DictionaryEntry } from '@english-bot/shared';
 import { WORDS_PAGE_SIZE, type WordsPage } from '../services/words.js';
 
-export function escapeHtml(text: string): string {
-  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
+import { escapeHtml } from '../utils/html.js';
+
+export { escapeHtml };
 
 /** Выделяет форму слова жирным внутри примера. */
 function highlight(sentence: string, form: string): string {
